@@ -7,5 +7,9 @@
 	<classpathentry kind="lib" path="lib/core/library/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="lib/core/library/jogl-all-natives-macosx-universal.jar"/>
 	<classpathentry kind="lib" path="lib/core/library/jogl-all.jar"/>
+	<classpathentry kind="lib" path="lib/box2d/jbox2d_2.1.2_ds_v2.jar"/>
+	<classpathentry kind="lib" path="lib/box2d/pbox2d.jar"/>
+	<classpathentry kind="lib" path="lib/box2d/slf4j-api-1.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/box2d/slf4j-nop-1.6.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
