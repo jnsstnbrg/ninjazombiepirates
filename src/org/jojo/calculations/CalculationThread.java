@@ -1,7 +1,6 @@
 package org.jojo.calculations;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class CalculationThread implements Runnable {
@@ -16,12 +15,11 @@ public class CalculationThread implements Runnable {
 
 	public void addUpdateListener(Object object) {
 		try {
-			Method method = object.getClass().getMethod("update", new Class[] {});
-			updateListeners.add(new UpdateListener(object, method));
+			updateListeners.add(new UpdateListener(object, object.getClass().getMethod("update", new Class[] {})));
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			System.err.println("No method called update in " + object.getClass().getSimpleName());
+			System.err.println("No public update method in " + object.getClass().getSimpleName());
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
