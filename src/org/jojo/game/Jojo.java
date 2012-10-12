@@ -14,7 +14,7 @@ import processing.core.PFont;
 import processing.event.KeyEvent;
 
 @SuppressWarnings("serial")
-public class Jojo extends PApplet implements DrawObject {
+public class Jojo extends PApplet {
 
 	private CalculationThread calculationThread;
 	private ArrayList<DrawObject> drawObjects = new ArrayList<DrawObject>();
@@ -23,7 +23,7 @@ public class Jojo extends PApplet implements DrawObject {
 	private PFont font;
 	
 	private ArrayList<ObstacleInterface> obstacles = new ArrayList<ObstacleInterface>();
-	private Player player;
+	public static Player player;
 
 	@Override
 	public void init() {
@@ -46,7 +46,7 @@ public class Jojo extends PApplet implements DrawObject {
 		obstacles.add(new Boundary(this, box2d, width - 100, height - 100, 100, 100));
 
 		for (ObstacleInterface o : obstacles) {
-			drawObjects.add(o);
+			drawObjects.add((DrawObject) o);
 		}
 		drawObjects.add(player = new Player(this, box2d, width / 2, 100));
 
@@ -56,10 +56,6 @@ public class Jojo extends PApplet implements DrawObject {
 		registerMethod("keyEvent", this);
 	}
 	
-	@Override
-	public void update() {
-	}
-
 	@Override
 	public void draw() {
 		background(255);

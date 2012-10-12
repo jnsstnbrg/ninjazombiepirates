@@ -12,7 +12,7 @@ import pbox2d.PBox2D;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
-public class Player implements DrawObject {
+public class Player extends DrawObject {
 
 	public enum Direction {
 		MS_LEFT, MS_RIGHT, MS_UP, MS_DOWN, MS_STOP;
@@ -54,6 +54,10 @@ public class Player implements DrawObject {
 
 		// Attach Fixture to Body
 		body.createFixture(fd);
+	}
+	
+	public Vec2 getPosition() {
+		return box2d.coordWorldToPixels(body.getPosition());
 	}
 
 	public void setDirection(Direction direction) {
