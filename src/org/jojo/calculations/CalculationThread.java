@@ -3,41 +3,35 @@ package org.jojo.calculations;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import org.jojo.game.DrawObject;
+
 public class CalculationThread implements Runnable {
 
 	private Thread t;
 	private int sleepTime;
-	private ArrayList<UpdateListener> updateListeners = new ArrayList<UpdateListener>();
+	private ArrayList<DrawObject> drawObjects = new ArrayList<DrawObject>();
 
-	public CalculationThread(int sleepTime) {
+	public CalculationThread(int sleepTime, ArrayList<DrawObject> drawObjects) {
 		this.sleepTime = sleepTime;
-	}
-
-	public void addUpdateListener(Object object) {
-		try {
-			updateListeners.add(new UpdateListener(object, object.getClass().getMethod("update", new Class[] {})));
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			System.err.println("No public update method in " + object.getClass().getSimpleName());
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
+		this.drawObjects = drawObjects;
 	}
 
 	@Override
 	public void run() {
 		Thread me = Thread.currentThread();
-		while (t == me) {
 
-			for (UpdateListener ul : updateListeners) {
+		while (t == me) {
+			for (int i = 0; i < drawObjects.size(); i++) {
+				DrawObject d = drawObjects.get(i);
 				try {
-					ul.getMethod().invoke(ul.getObject(), new Object[] {});
+					d.getClass().getMethod("update", new Class[] {}).invoke(d, new Object[] {});
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
 				}
 			}
@@ -68,5 +62,4 @@ public class CalculationThread implements Runnable {
 	public void dispose() {
 		stop();
 	}
-
 }

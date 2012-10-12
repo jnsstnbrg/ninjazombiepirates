@@ -4,13 +4,14 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jojo.game.DrawObject;
 import org.jojo.game.Position2D;
 
 import pbox2d.PBox2D;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
-public class Boundary {
+public class Boundary implements ObstacleInterface {
 
 	private PApplet parent;
 	
@@ -39,13 +40,29 @@ public class Boundary {
 		// Attached the shape to the body using a Fixture
 		b.createFixture(sd, 1);
 	}
+	
+	@Override
+	public void update() {
+		
+	}
 
 	// Draw the boundary, if it were at an angle we'd have to do something fancier
-	public void display() {
+	@Override
+	public void draw() {
 		parent.rectMode(PConstants.CENTER);
 		parent.fill(0);
 		parent.stroke(0);
 		parent.rect(position.x, position.y, position.width, position.height);
+	}
+
+	@Override
+	public void setPosition(Position2D position) {
+		this.position = position;
+	}
+
+	@Override
+	public Position2D getPosition() {
+		return position;
 	}
 
 }

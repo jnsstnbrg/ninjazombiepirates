@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.jojo.calculations.CalculationThread;
 import org.jojo.obstacles.Boundary;
+import org.jojo.obstacles.ObstacleInterface;
 import org.jojo.player.Player;
 import org.jojo.player.Player.Direction;
 
@@ -13,13 +14,15 @@ import processing.core.PFont;
 import processing.event.KeyEvent;
 
 @SuppressWarnings("serial")
-public class Jojo extends PApplet {
+public class Jojo extends PApplet implements DrawObject {
 
 	private CalculationThread calculationThread;
+	private ArrayList<DrawObject> drawObjects = new ArrayList<DrawObject>();
 	
 	private PBox2D box2d;
 	private PFont font;
-	private ArrayList<Boundary> boundaries;
+	
+	private ArrayList<ObstacleInterface> obstacles = new ArrayList<ObstacleInterface>();
 	private Player player;
 
 	@Override
@@ -34,20 +37,27 @@ public class Jojo extends PApplet {
 		background(255);
 		font = createFont("Courier", 10);
 		
-		calculationThread = new CalculationThread(16);
-		calculationThread.start();
-	
 		box2d = new PBox2D(this);
 		box2d.createWorld();
 		box2d.setGravity(0, 0);
-		
-		boundaries = new ArrayList<Boundary>();
-		boundaries.add(new Boundary(this, box2d, width / 2, height / 2, 100, 100));
 
-		player = new Player(this, box2d, width / 2, 100);
-		calculationThread.addUpdateListener(player);
+		obstacles.add(new Boundary(this, box2d, width / 2, height / 2, 100, 100));
+		obstacles.add(new Boundary(this, box2d, 100, 100, 100, 100));
+		obstacles.add(new Boundary(this, box2d, width - 100, height - 100, 100, 100));
 
+		for (ObstacleInterface o : obstacles) {
+			drawObjects.add(o);
+		}
+		drawObjects.add(player = new Player(this, box2d, width / 2, 100));
+
+		calculationThread = new CalculationThread(16, drawObjects);
+		calculationThread.start();
+	
 		registerMethod("keyEvent", this);
+	}
+	
+	@Override
+	public void update() {
 	}
 
 	@Override
@@ -55,46 +65,36 @@ public class Jojo extends PApplet {
 		background(255);
 
 		box2d.step();
-
-		for (Boundary b : boundaries) {
-			b.display();
+		
+		for (DrawObject d : drawObjects) {
+			d.draw();
 		}
-
-		player.display();
 
 		fill(0);
 		textFont(font);
 		text(frameRate, width - 45, font.getSize());
 	}
-
+	
 	public void keyEvent(KeyEvent e) {
 		switch (e.getAction()) {
 		case KeyEvent.PRESSED:
 			switch (e.getKeyCode()) {
-			case 32:
-				// space
+			case java.awt.event.KeyEvent.VK_SPACE:
 				player.setDirection(Direction.MS_STOP);
 				break;
-			case 37:
-				// left
+			case java.awt.event.KeyEvent.VK_LEFT:
 				player.setDirection(Direction.MS_LEFT);
 				break;
-			case 38:
-				// up
+			case java.awt.event.KeyEvent.VK_UP:
 				player.setDirection(Direction.MS_UP);
 				break;
-			case 39:
-				// right
+			case java.awt.event.KeyEvent.VK_RIGHT:
 				player.setDirection(Direction.MS_RIGHT);
 				break;
-			case 40:
-				// down
+			case java.awt.event.KeyEvent.VK_DOWN:
 				player.setDirection(Direction.MS_DOWN);
 				break;
 			}
-			break;
-		case KeyEvent.RELEASED:
-
 			break;
 		}
 	}
