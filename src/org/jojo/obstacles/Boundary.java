@@ -1,11 +1,11 @@
 package org.jojo.obstacles;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jojo.game.DrawObject;
-import org.jojo.game.Jojo;
 import org.jojo.game.Position2D;
 
 import pbox2d.PBox2D;
@@ -53,17 +53,16 @@ public class Boundary extends DrawObject implements ObstacleInterface {
 		parent.rectMode(PConstants.CENTER);
 		parent.fill(0);
 		parent.stroke(0);
-		parent.rect(position.x - Jojo.player.getPosition().x, position.y - Jojo.player.getPosition().y, position.width, position.height);
+		parent.rect(position.x, position.y, position.width, position.height);
 	}
-
-	@Override
+	
 	public void setPosition(Position2D position) {
 		this.position = position;
 	}
 
 	@Override
-	public Position2D getPosition() {
-		return position;
+	public Vec2 getPosition() {
+		return b.getPosition();
 	}
 
 }

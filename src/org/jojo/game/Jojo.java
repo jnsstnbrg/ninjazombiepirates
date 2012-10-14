@@ -18,10 +18,10 @@ public class Jojo extends PApplet {
 
 	private CalculationThread calculationThread;
 	private ArrayList<DrawObject> drawObjects = new ArrayList<DrawObject>();
-	
+
 	private PBox2D box2d;
 	private PFont font;
-	
+
 	private ArrayList<ObstacleInterface> obstacles = new ArrayList<ObstacleInterface>();
 	public static Player player;
 
@@ -33,10 +33,10 @@ public class Jojo extends PApplet {
 
 	@Override
 	public void setup() {
-		size(500, 500);
+		size(500, 500, P3D);
 		background(255);
 		font = createFont("Courier", 10);
-		
+
 		box2d = new PBox2D(this);
 		box2d.createWorld();
 		box2d.setGravity(0, 0);
@@ -52,25 +52,33 @@ public class Jojo extends PApplet {
 
 		calculationThread = new CalculationThread(16, drawObjects);
 		calculationThread.start();
-	
+
 		registerMethod("keyEvent", this);
 	}
-	
+
 	@Override
 	public void draw() {
 		background(255);
 
 		box2d.step();
-		
+
+		for (ObstacleInterface o : obstacles) {
+			if (o.getPosition().x + (100 * 2) > width || o.getPosition().x + 100 < 0) {
+				obstacles.remove(o);
+			}
+		}
+
 		for (DrawObject d : drawObjects) {
 			d.draw();
 		}
+
+		camera(player.getPosition().x, player.getPosition().y, (float) ((height / 2.0) / Math.tan(PI * 30.0 / 180.0)), player.getPosition().x, player.getPosition().y, 0f, 0f, 1f, 0f);
 
 		fill(0);
 		textFont(font);
 		text(frameRate, width - 45, font.getSize());
 	}
-	
+
 	public void keyEvent(KeyEvent e) {
 		switch (e.getAction()) {
 		case KeyEvent.PRESSED:
@@ -78,16 +86,16 @@ public class Jojo extends PApplet {
 			case java.awt.event.KeyEvent.VK_SPACE:
 				player.setDirection(Direction.MS_STOP);
 				break;
-			case java.awt.event.KeyEvent.VK_LEFT:
+			case java.awt.event.KeyEvent.VK_A:
 				player.setDirection(Direction.MS_LEFT);
 				break;
-			case java.awt.event.KeyEvent.VK_UP:
+			case java.awt.event.KeyEvent.VK_W:
 				player.setDirection(Direction.MS_UP);
 				break;
-			case java.awt.event.KeyEvent.VK_RIGHT:
+			case java.awt.event.KeyEvent.VK_D:
 				player.setDirection(Direction.MS_RIGHT);
 				break;
-			case java.awt.event.KeyEvent.VK_DOWN:
+			case java.awt.event.KeyEvent.VK_S:
 				player.setDirection(Direction.MS_DOWN);
 				break;
 			}
