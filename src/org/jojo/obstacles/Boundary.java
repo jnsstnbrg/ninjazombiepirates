@@ -51,8 +51,8 @@ public class Boundary extends DrawObject implements ObstacleInterface {
 	@Override
 	public void draw() {
 		parent.rectMode(PConstants.CENTER);
-		parent.fill(0);
-		parent.stroke(0);
+		parent.fill(200);
+		parent.stroke(255);
 		parent.rect(position.x, position.y, position.width, position.height);
 	}
 	

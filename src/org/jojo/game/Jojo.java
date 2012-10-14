@@ -19,7 +19,7 @@ public class Jojo extends PApplet {
 	private CalculationThread calculationThread;
 	private ArrayList<DrawObject> drawObjects = new ArrayList<DrawObject>();
 
-	private PBox2D box2d;
+	private PBox2D b2world;
 	private PFont font;
 
 	private ArrayList<ObstacleInterface> obstacles = new ArrayList<ObstacleInterface>();
@@ -33,22 +33,22 @@ public class Jojo extends PApplet {
 
 	@Override
 	public void setup() {
-		size(500, 500, P3D);
-		background(255);
-		font = createFont("Courier", 10);
+		size(800, 600, OPENGL);
+		font = createFont("Monaco", 10);
 
-		box2d = new PBox2D(this);
-		box2d.createWorld();
-		box2d.setGravity(0, 0);
+		// Set up world
+		b2world = new PBox2D(this);
+		b2world.createWorld();
+		b2world.setGravity(0, 0);
 
-		obstacles.add(new Boundary(this, box2d, width / 2, height / 2, 100, 100));
-		obstacles.add(new Boundary(this, box2d, 100, 100, 100, 100));
-		obstacles.add(new Boundary(this, box2d, width - 100, height - 100, 100, 100));
+		// Add test obstacle
+		obstacles.add(new Boundary(this, b2world, 0, 0, 100, 100));
+		obstacles.add(new Boundary(this, b2world, width - 100, height - 100, 100, 100));
 
 		for (ObstacleInterface o : obstacles) {
 			drawObjects.add((DrawObject) o);
 		}
-		drawObjects.add(player = new Player(this, box2d, width / 2, 100));
+		drawObjects.add(player = new Player(this, b2world, width / 2, 100));
 
 		calculationThread = new CalculationThread(16, drawObjects);
 		calculationThread.start();
@@ -58,9 +58,9 @@ public class Jojo extends PApplet {
 
 	@Override
 	public void draw() {
-		background(255);
+		background(0);
 
-		box2d.step();
+		b2world.step();
 
 		for (ObstacleInterface o : obstacles) {
 			if (o.getPosition().x + (100 * 2) > width || o.getPosition().x + 100 < 0) {
@@ -74,7 +74,7 @@ public class Jojo extends PApplet {
 
 		camera(player.getPosition().x, player.getPosition().y, (float) ((height / 2.0) / Math.tan(PI * 30.0 / 180.0)), player.getPosition().x, player.getPosition().y, 0f, 0f, 1f, 0f);
 
-		fill(0);
+		fill(255);
 		textFont(font);
 		text(frameRate, width - 45, font.getSize());
 	}
